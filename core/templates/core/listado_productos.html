@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block contenido %}
+
+<h2>listado de productos</h2>
+<a href="{% url 'nuevo_producto' %}">Nuevo producto</a>
+<br>
+<br>
+<table class="table table-striped">
+    <tr>
+        <th>Nombre</th>
+        <th>Valor</th>
+        <th>Categoria</th>
+        <th>Descripción</th>
+    </tr>
+{% for p in productos %}
+    <tr>
+        <td>{{p.nombre}}</td>
+        <td>{{p.valor}}</td>
+        <td>{{p.categoria}}</td>
+        <td>{{p.descripcion}}</td>
+    
+        <td>
+          <a href="{% url 'modificar_producto' p.id %}">Modificar</a>
+          <a href="{% url 'eliminar_producto'  p.id %}">Eliminar</a>
+        </td>
+        
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}
