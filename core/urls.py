@@ -1,7 +1,16 @@
 from email.mime import base
+from xml.etree.ElementInclude import include
+from django.db import router
 from django.urls import path
 from .views import home, base, galeria, listado_productos, nuevo_producto, modificar_producto, eliminar_producto, registro_usuario
+from django.urls.conf import include
 
+from .views import ProductoViewSet
+from rest_framework import routers
+
+
+router = routers.DefaultRouter()
+router.register('productos', ProductoViewSet)
 
 urlpatterns = [
     path('', home, name="home"),
@@ -12,4 +21,5 @@ urlpatterns = [
     path('modificar_producto/<id>/',modificar_producto,name="modificar_producto"),
     path('eliminar_producto/<id>/',eliminar_producto,name="eliminar_producto"),
     path('registro/', registro_usuario, name='registro_usuario'),
+    path('api/', include(router.urls)),
 ]    

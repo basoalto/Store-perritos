@@ -6,6 +6,9 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import login, authenticate
 # Create your views here.
 
+from rest_framework import viewsets
+from .serializer import ProductoSerializer
+
 def home(request):
     return render(request, 'core/home.html')
 
@@ -77,4 +80,9 @@ def registro_usuario(request):
             login(request, user)
             return redirect(to='home')
 
-    return render(request, "registration/registrar.html", data)   
+    return render(request, "registration/registrar.html", data) 
+
+
+class ProductoViewSet(viewsets.ModelViewSet):
+    queryset = Producto.objects.all()
+    serializer_class = ProductoSerializer  
