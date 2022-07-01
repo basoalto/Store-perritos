@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'core',
     'crispy_forms',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
@@ -78,6 +79,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'perritos.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEAFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

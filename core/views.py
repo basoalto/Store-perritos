@@ -1,13 +1,22 @@
+from telnetlib import STATUS
 from django.shortcuts import render
 from core.forms import ProductoForm, CustomUserForm
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from core.models import Producto
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import login, authenticate
+from rest_framework.decorators import api_view, permission_classes
 # Create your views here.
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
-from rest_framework import viewsets
+
 from .serializer import ProductoSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.parsers import JSONParser
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework import status
 
 def home(request):
     return render(request, 'core/home.html')
@@ -62,8 +71,6 @@ def eliminar_producto(request, id):
 
     return redirect(to="listado_producto")
 
-
-
 def registro_usuario(request):
     data = {
         'form': CustomUserForm()
@@ -82,7 +89,46 @@ def registro_usuario(request):
 
     return render(request, "registration/registrar.html", data) 
 
+@csrf_exempt
+@api_view(['GET','POST'])
+@permission_classes((IsAuthenticated))
+def lista_productos(request):
+    if request.method == 'GET':
+        producto = Producto.objects.all()
+        serializer = ProductoSerializer(producto, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = ProductoSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ProductoViewSet(viewsets.ModelViewSet):
-    queryset = Producto.objects.all()
-    serializer_class = ProductoSerializer  
+@api_view(['GET','PUT','DELETE'])
+@permission_classes((IsAuthenticated))
+def detalle_producto(request, id):
+    
+    try:
+        producto =Producto.objects.get(id=id)
+    except Producto.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        serializer = ProductoSerializer(producto)
+        return Response(serializer.data)
+    if request.mothod == 'PUT':
+        data = JSONParser().parse(request)
+        serializer = ProductoSerializer(producto, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.mothod == 'DELETE':
+         producto.delete()
+         return Response(status.HTTP_204_NO_CONTENT)
+
+# class ProductoViewSet(viewsets.ModelViewSet):
+#     queryset = Producto.objects.all()
+#     serializer_class = ProductoSerializer  
