@@ -3,7 +3,7 @@
 {% block contenido %}
 
 <h2>listado de productos</h2>
-<a href="{% url 'nuevo_producto' %}">Nuevo producto</a>
+<a button type="button" class="btn btn-outline-secondary" href="{% url 'nuevo_producto' %}">Nuevo producto</a>
 <br>
 <br>
 <table class="table table-striped">
@@ -21,8 +21,8 @@
         <td>{{p.descripcion}}</td>
     
         <td>
-          <a href="{% url 'modificar_producto' p.id %}">Modificar</a>
-          <a href="{% url 'eliminar_producto'  p.id %}">Eliminar</a>
+          <a  type="button" class="btn btn-outline-primary" href="{% url 'modificar_producto' p.id %}">Modificar</a>
+          <a  type="button" class="btn btn-outline-danger" href="{% url 'eliminar_producto'  p.id %}">Eliminar</a>
         </td>
         
     </tr>

@@ -10,7 +10,6 @@ class Categoria(models.Model):
         return self.nombre
 
 class Producto(models.Model):
-    idproducto = models.IntegerField()
     nombre = models.CharField(max_length=200)
     valor = models.IntegerField(default=5000)
     anio = models.IntegerField()
